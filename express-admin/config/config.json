@@ -1,0 +1,15 @@
+{
+    "mysql": {
+        "database": "tptestunitaire",
+        "user": "user",
+        "password": "password"
+    },
+    "server": {
+        "port": 3306
+    },
+    "app": {
+        "layouts": true,
+        "themes": true,
+        "languages": true
+    }
+}
