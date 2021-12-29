@@ -34,4 +34,18 @@ describe('test user functions', () => {
         })
         expect(user.isValid()).toBe(false);
     });
+
+    it('should be a bad user validation', () => {
+        const apiEmailValidator = new ApiEmailValidator()
+        apiEmailValidator.check = jest.fn((email) => true)
+        const user = new User({
+            email: 'alext77165@gmail.com',
+            birthDate: DateTime.now().minus({ years: 20 }).toJSDate(),
+            lastName: 'Trouvé',
+            firstName: 'Alexandre',
+            password: 'azertyuiopqsdfghjklmwxcvbnazertyuiopqsdfghjklmwxcvbn',
+            apiEmailValidator
+        })
+        expect(user.isValid()).toBe(false);
+    });
 })    
