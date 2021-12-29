@@ -12,7 +12,7 @@ export class ToDoList {
     }
 
     add(item){
-        if(this._checkAdd(item)){
+        if(this._checkAdd(item) == true){
             this.list.push(item);
             return 'Success !'
         } else {
@@ -26,31 +26,32 @@ export class ToDoList {
     _checkAdd(item) {
         // Check Nombre d'items
         const nbItems = this.getList().length;
-        
-        console.log(nbItems)
-        console.log(item)
 
-        if (nbItems >= 10 || nbItems < 0 ) {
+        if (nbItems >= 10 ) {
             return "Vous ne pouvez avoir que 10 items";
         }
-        if (nbItems == 8) {
+        else if (nbItems == 8) {
             EmailSenderService.send(this.user.email ,"Vous ne pouvez plus qu'ajouter 2 items");
+            return true;
         }
         
         // Check Nom de l'item
-        if(!item.name || this.getList().includes(item.name)){
+        if(!item.name || this.getList().filter(i => i.name == item.name).length > 0){
             return "Le nom de cet item n'est pas unique";
         }
 
         // Check Content de l'item
-        if(!item.content || item.content.split().length > 1000){
+        if(!item.content || item.content.length > 1000){
             return "Cet item contient trop de caractère";
         }
 
         // Check Date de création
-        if(!item.createdAt || DateTime.fromJSDate(this.getList().at(-1).createdAt).diffNow('minutes').minutes < - 30){
+        if(nbItems != 0 && (!item.createdAt || item.createdAt - this.getList().at(-1).createdAt < 1800000)){
             return "Vous avez déjà envoyé un item dans les 30 minutes";
+            //throw "Vous avez déjà envoyé un item dans les 30 minutes";
         }
+
+        return true;
 
     }
 
@@ -63,13 +64,6 @@ export class ToDoList {
     }
 
     getList(){
-        const items = [
-            {
-                name: 'Le nom',
-                content: 'Le contenu',
-                createdAt: 1639392693,
-            }
-        ]
-        return items;
+        return this.list;
     }
 }
